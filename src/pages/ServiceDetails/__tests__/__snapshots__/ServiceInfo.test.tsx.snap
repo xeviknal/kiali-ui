@@ -229,17 +229,19 @@ exports[`#ServiceInfo render correctly with data should render serviceInfo with 
           }
           tabName="list"
         >
-          <ForwardRef
+          <WithErrorBoundary
             eventKey={0}
+            message="One of the Workloads associated to this service has an invalid format"
             title="Workloads (0)"
           >
             <ServiceInfoWorkload
               namespace="istio-system"
               workloads={Array []}
             />
-          </ForwardRef>
-          <ForwardRef
+          </WithErrorBoundary>
+          <WithErrorBoundary
             eventKey={1}
+            message="One of the Virtual Services associated to this service has an invalid format"
             title={
               <UNDEFINED>
                 Virtual Services (
@@ -280,9 +282,10 @@ exports[`#ServiceInfo render correctly with data should render serviceInfo with 
                 ]
               }
             />
-          </ForwardRef>
-          <ForwardRef
+          </WithErrorBoundary>
+          <WithErrorBoundary
             eventKey={2}
+            message="One of the Destination Rules associated to this service has an invalid format"
             title={
               <UNDEFINED>
                 Destination Rules (
@@ -358,7 +361,7 @@ exports[`#ServiceInfo render correctly with data should render serviceInfo with 
                 }
               }
             />
-          </ForwardRef>
+          </WithErrorBoundary>
         </ParameterizedTabs>
       </Col>
     </Row>

@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { Alert, TabPane } from 'patternfly-react';
+import { Alert } from 'patternfly-react';
 import ErrorBoundary from './ErrorBoundary';
+import { Tab, TabProps } from '@patternfly/react-core';
+import { FunctionComponent } from 'react';
 
 interface WithMessage {
   message: string;
 }
 
-const withErrorBoundary = <P extends object>(WrappedComponent: React.ComponentClass<P>) =>
+const withErrorBoundary = <P extends object>(WrappedComponent: FunctionComponent<P>) =>
   class WithErrorBoundary extends React.Component<P & WithMessage> {
     alert() {
       return (
@@ -25,4 +27,4 @@ const withErrorBoundary = <P extends object>(WrappedComponent: React.ComponentCl
     }
   };
 
-export const TabPaneWithErrorBoundary = withErrorBoundary<TabPane.propTypes>(TabPane);
+export const TabWithErrorBoundary = withErrorBoundary<TabProps>(Tab);

@@ -14,7 +14,7 @@ import { ThreeScaleInfo, ThreeScaleServiceRule } from '../../types/ThreeScale';
 import { DurationDropdownContainer } from '../../components/DurationDropdown/DurationDropdown';
 import RefreshButtonContainer from '../../components/Refresh/RefreshButton';
 import ParameterizedTabs, { activeTab } from '../../components/Tab/Tabs';
-import { Tab } from '@patternfly/react-core';
+import { TabWithErrorBoundary } from '../../components/ErrorBoundary/WithErrorBoundary';
 
 interface ServiceDetails extends ServiceId {
   serviceDetails: ServiceDetailsInfo;
@@ -210,27 +210,39 @@ class ServiceInfo extends React.Component<ServiceDetails, ServiceInfoState> {
                 tabName={tabName}
                 defaultTab={defaultTab}
               >
-                <Tab eventKey={0} title={'Workloads (' + Object.keys(workloads).length + ')'}>
+                <TabWithErrorBoundary
+                  eventKey={0}
+                  title={'Workloads (' + Object.keys(workloads).length + ')'}
+                  message={this.errorBoundaryMessage('Workloads')}
+                >
                   {(Object.keys(workloads).length > 0 || this.props.serviceDetails.istioSidecar) && (
                     <ServiceInfoWorkload workloads={workloads} namespace={this.props.namespace} />
                   )}
-                </Tab>
-                <Tab eventKey={1} title={vsTabTitle}>
+                </TabWithErrorBoundary>
+                <TabWithErrorBoundary
+                  eventKey={1}
+                  title={vsTabTitle}
+                  message={this.errorBoundaryMessage('Virtual Services')}
+                >
                   {(virtualServices.items.length > 0 || this.props.serviceDetails.istioSidecar) && (
                     <ServiceInfoVirtualServices
                       virtualServices={virtualServices.items}
                       validations={validations!.virtualservice}
                     />
                   )}
-                </Tab>
-                <Tab eventKey={2} title={drTabTitle}>
+                </TabWithErrorBoundary>
+                <TabWithErrorBoundary
+                  eventKey={2}
+                  title={drTabTitle}
+                  message={this.errorBoundaryMessage('Destination Rules')}
+                >
                   {(destinationRules.items.length > 0 || this.props.serviceDetails.istioSidecar) && (
                     <ServiceInfoDestinationRules
                       destinationRules={destinationRules.items}
                       validations={validations!.destinationrule}
                     />
                   )}
-                </Tab>
+                </TabWithErrorBoundary>
               </ParameterizedTabs>
             </Col>
           </Row>
