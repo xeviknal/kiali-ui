@@ -73,10 +73,28 @@ export class RouteTable implements SummaryTable {
         isNumeric: false,
         param: 'doms',
         compare: (a, b) => {
-        return [a.domains.service, a.domains.namespace, a.domains.cluster]
-          .join('.')
-          .localeCompare([b.domains.service, b.domains.namespace, b.domains.cluster].join('.'));
-  }
+          return [a.domains.service, a.domains.namespace, a.domains.cluster]
+            .join('.')
+            .localeCompare([b.domains.service, b.domains.namespace, b.domains.cluster].join('.'));
+        }
+      },
+      {
+        id: 'match',
+        title: 'Match',
+        isNumeric: false,
+        param: 'match',
+        compare: (a, b) => {
+          return a.match.localeCompare(b.match);
+        }
+      },
+      {
+        id: 'vs',
+        title: 'Virtual Service',
+        isNumeric: false,
+        param: 'vs',
+        compare: (a, b) => {
+          return a.virtual_service.localeCompare(b.virtual_service);
+        }
       }
     ];
   };
@@ -110,11 +128,11 @@ export class RouteTable implements SummaryTable {
         return defaultFilter(value, this.filterMethods());
       })
       .sort((a: RouteSummary, b: RouteSummary) => {
-        return this.sortFields()
+        const sortField = this.sortFields()
           .find((value: SortField<RouteSummary>): boolean => {
             return value.id === this.sortFields()[this.sortingIndex].id;
-          })!
-          .compare(a, b);
+          });
+        return this.sortingDirection === 'asc' ? sortField!.compare(a, b) : sortField!.compare(b, a);
       })
       .map((summary: RouteSummary): (string | number | JSX.Element)[] => {
         return [summary.name, serviceLink(summary.domains, this.namespaces, this.namespace, true), summary.match, istioConfigLink(summary.virtual_service, 'virtualservice')];

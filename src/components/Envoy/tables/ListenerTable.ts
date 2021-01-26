@@ -143,11 +143,11 @@ export class ListenerTable implements SummaryTable {
         return defaultFilter(value, this.filterMethods());
       })
       .sort((a: ListenerSummary, b: ListenerSummary) => {
-        return this.sortFields()
+        const sortField = this.sortFields()
           .find((value: SortField<ListenerSummary>): boolean => {
             return value.id === this.sortFields()[this.sortingIndex].id;
-          })!
-          .compare(a, b);
+          });
+        return this.sortingDirection === 'asc' ? sortField!.compare(a, b) : sortField!.compare(b, a);
       })
       .map((summary: ListenerSummary) => {
         return [summary.address, summary.port, summary.match, summary.destination];

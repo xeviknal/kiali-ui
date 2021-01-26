@@ -173,18 +173,18 @@ export class ClusterTable implements SummaryTable {
         return defaultFilter(value, this.filterMethods());
       })
       .sort((a: ClusterSummary, b: ClusterSummary): number => {
-        return this.sortFields()
+        const sortField = this.sortFields()
           .find((value: SortField<ClusterSummary>): boolean => {
             return value.id === this.sortFields()[this.sortingIndex].id;
-          })!
-          .compare(a, b);
+          });
+        return this.sortingDirection === 'asc' ? sortField!.compare(a, b) : sortField!.compare(b, a);
       })
       .map((value: ClusterSummary): (string | number | JSX.Element)[] => {
         return [
           serviceLink(value.service_fqdn, this.namespaces, this.namespace),
           value.port,
-          value.direction,
           value.subset,
+          value.direction,
           value.type,
           istioConfigLink(value.destination_rule, 'destinationrule')
         ];
